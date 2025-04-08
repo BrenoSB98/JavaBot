@@ -5,20 +5,23 @@ from langchain.chains.retrieval import create_retrieval_chain
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_ollama import OllamaLLM
 
-MODEL = 'INSIRA O NOME DO SEU MODELO AQUI'  # Exemplo: 'llama2-7b-chat-hf'
+MODEL = 'codellama:13b'  # Exemplo: 'llama2-7b-chat-hf'
 
 def llm(query, vector_store):
     llm = OllamaLLM(model=MODEL)
     retriever = vector_store.as_retriever()
 
     system_prompt = '''
-    Use o contexto para responder as perguntas.
-    Se não encontrar uma resposta no contexto,
-    explique que não há informações disponíveis.
-    Responda em formato de markdown e com visualizações
-    elaboradas e interativas.
-    Contexto: {context}
+        Você é um desenvolvedor de software altamente experiente, especializado em Java, SQL, Spring Boot, JavaScript e Angular.
+        Responda às perguntas com base no contexto fornecido. 
+        Caso a resposta não possa ser extraída do contexto, informe claramente que não há informações disponíveis.
+        Utilize a linguagem de programação solicitada na pergunta. 
+        Se nenhuma linguagem for especificada, utilize Java como padrão.
+        Ao gerar códigos, priorize clareza, concisão e boas práticas de programação. 
+        Evite explicações desnecessárias e não inclua informações pessoais ou confidenciais.
+        Contexto: {context}
     '''
+
     messages = [('system', system_prompt)]
     for message in st.session_state.messages:
         messages.append((message.get('role'), message.get('content')))
